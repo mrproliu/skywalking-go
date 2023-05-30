@@ -15,24 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package microv4
+package operator
 
-import (
-	"github.com/apache/skywalking-go/plugins/core/operator"
-
-	"go-micro.dev/v4"
-)
-
-type NewServiceInterceptor struct {
+type FieldFilter interface {
+	Name() string
+	Interface() interface{}
+	Type() interface{}
 }
 
-func (n *NewServiceInterceptor) BeforeInvoke(invocation operator.Invocation) error {
-	options := invocation.Args()[0].([]micro.Option)
-	options = append(options, micro.WrapClient(NewClientWrapper))
-	invocation.ChangeArg(0, options)
-	return nil
-}
+type FieldFilterOption func(filter *FieldFilter)
 
-func (n *NewServiceInterceptor) AfterInvoke(invocation operator.Invocation, results ...interface{}) error {
-	return nil
+type ToolsOperator interface {
+	ReflectGetValueByType(instance interface{}, filters []interface{}) interface{}
 }

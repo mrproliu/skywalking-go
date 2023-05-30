@@ -22,6 +22,7 @@ import (
 	"go-micro.dev/v4/client"
 	"log"
 	"net/http"
+	"time"
 
 	hello "github.com/go-micro/examples/greeter/srv/proto/hello"
 
@@ -37,7 +38,7 @@ func main() {
 	cl := hello.NewSayService("go.micro.srv.greeter", service.Client())
 
 	http.HandleFunc("/consumer", func(writer http.ResponseWriter, request *http.Request) {
-		resp, err := cl.Hello(context.Background(), &hello.Request{Name: "John"}, client.WithConnClose())
+		resp, err := cl.Hello(context.Background(), &hello.Request{Name: "John"}, client.WithRequestTimeout(time.Minute*10))
 		if err != nil {
 			_, _ = writer.Write([]byte(err.Error()))
 			return
