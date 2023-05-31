@@ -114,6 +114,28 @@ func SetRuntimeContextValue(key string, val interface{}) {
 	}
 }
 
+func CaptureContext() ContextSnapshot {
+	if op := operator.GetOperator(); op != nil {
+		ctx := op.Tracing().(operator.TracingOperator).CaptureContext()
+		if ctx != nil {
+			return ctx.(ContextSnapshot)
+		}
+	}
+	return nil
+}
+
+func ContinueContext(ctx ContextSnapshot) {
+	if op := operator.GetOperator(); op != nil {
+		op.Tracing().(operator.TracingOperator).ContinueContext(ctx)
+	}
+}
+
+func CleanContext() {
+	if op := operator.GetOperator(); op != nil {
+		op.Tracing().(operator.TracingOperator).CleanContext()
+	}
+}
+
 // DebugStack returns the stack of the current goroutine, for getting details when plugin broken.
 func DebugStack() []byte {
 	op := operator.GetOperator()
@@ -191,6 +213,4 @@ func (n *NoopSpan) End() {
 func (n *NoopSpan) PrepareAsync() {
 }
 func (n *NoopSpan) AsyncFinish() {
-}
-func (n *NoopSpan) ContinueContext() {
 }

@@ -19,7 +19,6 @@ package socket
 
 import (
 	"github.com/apache/skywalking-go/plugins/core/operator"
-	"github.com/apache/skywalking-go/plugins/core/tracing"
 )
 
 type CloseInterceptor struct {
@@ -35,7 +34,7 @@ func (n *CloseInterceptor) AfterInvoke(invocation operator.Invocation, results .
 	if span == nil {
 		return nil
 	}
-	span.(tracing.Span).AsyncFinish()
+	span.(*InjectData).Span.AsyncFinish()
 	instance.SetSkyWalkingDynamicField(nil)
 	return nil
 }
