@@ -69,7 +69,7 @@ func (c *Context) MultipleFilesWithWritten(writeFileNamePrefix, targetDir, fromP
 	}
 
 	// register all top level vars, encase it cannot be found
-	c.rewriteTopLevelVarFirst(files)
+	c.rewriteTopLevelFirst(files)
 
 	var err error
 	for f, parseFile := range files {
@@ -108,7 +108,7 @@ func (c *Context) processSingleFile(file *dst.File, fromPackage string) {
 		case *dst.ImportSpec:
 			c.Import(n, cursor)
 		case *dst.TypeSpec:
-			c.Type(n, cursor, false)
+			c.Type(n, cursor.Parent(), false)
 		case *dst.ValueSpec:
 			c.Var(n, false)
 		default:
@@ -123,19 +123,24 @@ func (c *Context) processSingleFile(file *dst.File, fromPackage string) {
 	tools.RemoveImportDefineIfNoPackage(file)
 }
 
-func (c *Context) rewriteTopLevelVarFirst(files map[*FileInfo]*dst.File) {
+func (c *Context) rewriteTopLevelFirst(files map[*FileInfo]*dst.File) {
 	for _, f := range files {
 		dstutil.Apply(f, func(cursor *dstutil.Cursor) bool {
 			switch n := cursor.Node().(type) {
 			case *dst.FuncDecl:
 			case *dst.ImportSpec:
 			case *dst.TypeSpec:
-				c.Type(n, cursor, true)
 			case *dst.GenDecl:
 				if n.Tok == token.VAR && cursor.Parent() == f {
 					for _, spec := range n.Specs {
 						if valueSpec, ok := spec.(*dst.ValueSpec); ok {
 							c.Var(valueSpec, true)
+						}
+					}
+				} else if n.Tok == token.TYPE && cursor.Parent() == f {
+					for _, spec := range n.Specs {
+						if typeSpec, ok := spec.(*dst.TypeSpec); ok {
+							c.Type(typeSpec, n, true)
 						}
 					}
 				}
