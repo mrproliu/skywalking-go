@@ -89,5 +89,6 @@ segmentItems:
               - { key: url, value: 'service:8080/consumer' }
               - { key: http.params, value: '' }
               - { key: status_code, value: '200' }
-meterItems: []
+meterItems:
+  - name: test
 logItems: []
