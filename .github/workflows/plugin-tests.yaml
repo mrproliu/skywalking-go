@@ -37,33 +37,11 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      - name: Setup Docker on macOS
+      - name: Setup upterm session
         if: runner.os == 'macos'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          brew update --preinstall
-          
-          LIMA_VERSION=$(gh release -R lima-vm/lima view --json tagName -q ".tagName")
-          echo "Installing Lima version $LIMA_VERSION"
-          curl -fsSL "https://github.com/lima-vm/lima/releases/download/${LIMA_VERSION}/lima-${LIMA_VERSION:1}-$(uname -s)-$(uname -m).tar.gz" | tar Cxzvm /usr/local
-          
-          COLIMA_VERSION=$(gh release -R abiosoft/colima view --json tagName -q ".tagName")
-          echo "Installing Colima version $COLIMA_VERSION"
-          curl -LO https://github.com/abiosoft/colima/releases/download/${COLIMA_VERSION}/colima-$(uname)-$(uname -m)
-          install colima-$(uname)-$(uname -m) /usr/local/bin/colima
-          
-          echo "Installing QEMU, Docker client, and Docker Compose"
-          brew install docker docker-compose qemu 2>&1 | tee install.log
-          
-          echo "Configuration Docker Compose Plugins"
-          mkdir -p ~/.docker/cli-plugins
-          ln -sfn "$(brew --prefix)/opt/docker-compose/bin/docker-compose" ~/.docker/cli-plugins/docker-compose
-          
-          CPU_COUNT=$(sysctl -n hw.ncpu)
-          MEMORY=$(sysctl hw.memsize | awk '{print $2/1024/1024/1024}')
-          echo "Starting Colima with $CPU_COUNT CPUs and $MEMORY GB of memory"
-          colima start --cpu $CPU_COUNT --memory $MEMORY
+        uses: lhotari/action-upterm@v1
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
         with:
@@ -150,33 +128,34 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      - name: Setup Docker on macOS
+      - name: Setup upterm session
         if: runner.os == 'macos'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          brew update --preinstall
-          
-          LIMA_VERSION=$(gh release -R lima-vm/lima view --json tagName -q ".tagName")
-          echo "Installing Lima version $LIMA_VERSION"
-          curl -fsSL "https://github.com/lima-vm/lima/releases/download/${LIMA_VERSION}/lima-${LIMA_VERSION:1}-$(uname -s)-$(uname -m).tar.gz" | tar Cxzvm /usr/local
-          
-          COLIMA_VERSION=$(gh release -R abiosoft/colima view --json tagName -q ".tagName")
-          echo "Installing Colima version $COLIMA_VERSION"
-          curl -LO https://github.com/abiosoft/colima/releases/download/${COLIMA_VERSION}/colima-$(uname)-$(uname -m)
-          install colima-$(uname)-$(uname -m) /usr/local/bin/colima
-          
-          echo "Installing QEMU, Docker client, and Docker Compose"
-          brew install docker docker-compose qemu 2>&1 | tee install.log
-          
-          echo "Configuration Docker Compose Plugins"
-          mkdir -p ~/.docker/cli-plugins
-          ln -sfn "$(brew --prefix)/opt/docker-compose/bin/docker-compose" ~/.docker/cli-plugins/docker-compose
-          
-          CPU_COUNT=$(sysctl -n hw.ncpu)
-          MEMORY=$(sysctl hw.memsize | awk '{print $2/1024/1024/1024}')
-          echo "Starting Colima with $CPU_COUNT CPUs and $MEMORY GB of memory"
-          colima start --cpu $CPU_COUNT --memory $MEMORY
+        uses: lhotari/action-upterm@v1
+#        run: |
+#          brew update --preinstall
+#
+#          LIMA_VERSION=$(gh release -R lima-vm/lima view --json tagName -q ".tagName")
+#          echo "Installing Lima version $LIMA_VERSION"
+#          curl -fsSL "https://github.com/lima-vm/lima/releases/download/${LIMA_VERSION}/lima-${LIMA_VERSION:1}-$(uname -s)-$(uname -m).tar.gz" | tar Cxzvm /usr/local
+#
+#          COLIMA_VERSION=$(gh release -R abiosoft/colima view --json tagName -q ".tagName")
+#          echo "Installing Colima version $COLIMA_VERSION"
+#          curl -LO https://github.com/abiosoft/colima/releases/download/${COLIMA_VERSION}/colima-$(uname)-$(uname -m)
+#          install colima-$(uname)-$(uname -m) /usr/local/bin/colima
+#
+#          echo "Installing QEMU, Docker client, and Docker Compose"
+#          brew install docker docker-compose qemu 2>&1 | tee install.log
+#
+#          echo "Configuration Docker Compose Plugins"
+#          mkdir -p ~/.docker/cli-plugins
+#          ln -sfn "$(brew --prefix)/opt/docker-compose/bin/docker-compose" ~/.docker/cli-plugins/docker-compose
+#
+#          CPU_COUNT=$(sysctl -n hw.ncpu)
+#          MEMORY=$(sysctl hw.memsize | awk '{print $2/1024/1024/1024}')
+#          echo "Starting Colima with $CPU_COUNT CPUs and $MEMORY GB of memory"
+#          colima start --cpu $CPU_COUNT --memory $MEMORY
       - name: Setup Tools
         run: |
           chmod +x test/plugins/dist/*
