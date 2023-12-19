@@ -140,6 +140,7 @@ jobs:
         if: runner.os == 'macos'
         run: |
           brew install docker docker-compose
+          brew link --overwrite python@3.12
           brew install colima
           brew services start colima
 
