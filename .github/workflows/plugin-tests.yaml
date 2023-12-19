@@ -42,7 +42,7 @@ jobs:
         run: |
           brew install docker
           echo "111111111111111111"
-          brew link --overwrite python@3.12
+          brew unlink python@3.12 && brew link python@3.12
           echo "12121212121212"
           brew install colima
           echo "222222222222222222"
