@@ -37,11 +37,10 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      - name: Setup upterm session
-        if: runner.os == 'macos'
+      - name: Setup tmate session
         env:
           GH_TOKEN: ${{ github.token }}
-        uses: lhotari/action-upterm@v1
+        uses: mxschmitt/action-tmate@v3
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
         with:
@@ -128,11 +127,10 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      - name: Setup upterm session
-        if: runner.os == 'macos'
+      - name: Setup tmate session
         env:
           GH_TOKEN: ${{ github.token }}
-        uses: lhotari/action-upterm@v1
+        uses: mxschmitt/action-tmate@v3
 #        run: |
 #          brew update --preinstall
 #
