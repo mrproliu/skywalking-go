@@ -41,8 +41,11 @@ jobs:
         if: runner.os == 'macos'
         run: |
           brew install docker
+          echo "111111111111111111"
           brew install colima
-          colima start
+          echo "222222222222222222"
+          brew services start colima
+          echo "333333333333333333"
 
           # For testcontainers to find the Colima socket
           # https://github.com/abiosoft/colima/blob/main/docs/FAQ.md#cannot-connect-to-the-docker-daemon-at-unixvarrundockersock-is-the-docker-daemon-running
