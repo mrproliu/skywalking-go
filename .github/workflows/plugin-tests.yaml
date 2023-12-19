@@ -37,17 +37,12 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      - name: Setup upterm session
-        if: runner.os == 'macos'
-        uses: lhotari/action-upterm@v1
       - name: Setup docker (missing on MacOS)
         if: runner.os == 'macos'
         run: |
           brew install docker
           echo "111111111111111111"
-          brew unlink python@3.12 && brew link python@3.12
-          echo "12121212121212"
-          brew install colima
+          brew install colima || true
           echo "222222222222222222"
           brew services start colima
           echo "333333333333333333"
