@@ -40,6 +40,9 @@ jobs:
       - name: Setup tmate session
         env:
           GH_TOKEN: ${{ github.token }}
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_INSTALL_UPGRADE: "1"
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: "1"
         uses: mxschmitt/action-tmate@v3
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
@@ -130,6 +133,9 @@ jobs:
       - name: Setup tmate session
         env:
           GH_TOKEN: ${{ github.token }}
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_INSTALL_UPGRADE: "1"
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: "1"
         uses: mxschmitt/action-tmate@v3
 #        run: |
 #          brew update --preinstall
