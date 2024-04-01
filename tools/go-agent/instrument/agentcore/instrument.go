@@ -41,7 +41,7 @@ var (
 	ReporterFromBasePackage = "reporter"
 	ReporterBasePackage     = "agent/reporter"
 
-	CopiedBasePackage = `skywalking-go(@[\d\w\.\-]+)?\/agent\/core`
+	CopiedBasePackage = `skywalking-go(@[\d\w\.\-]+)?[\\/]agent[\\/]core`
 	CopiedSubPackages = []string{"", "tracing", "operator"}
 )
 
